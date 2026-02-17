@@ -21,10 +21,6 @@ void clearScreen() {
 }
 
 
-
-
-
-
 // return colour based on numbers using switch case
 void displayColor(int color) {
     clearScreen();
@@ -66,86 +62,128 @@ void displayColor(int color) {
 }
 
 
-
-
-
 // main function
 
 int main() {
-    int correctSequence[100];
-    int playerInput[100];
-    int level = 0;
-    
+    char playAgain;
+    int highScore = 0; // Variable to store the highest score
+
     srand(time(0)); // seed random number generator
-    
-    clearScreen(); // clear terminal 
 
-    // GAME STARTS
+    do {
+        int correctSequence[100];
+        int playerInput[100];
+        int level = 0;
 
-    printf("\n MEMORY FLASH GAME \n");
-    printf("1=RED🟥, 2=GREEN🟩, 3=BLUE🟦, 4=YELLOW🟨\n");
-    printf("\nPress Enter to start...");
-    getchar();
-    
-    while(1) {
-        level++;  // Level increment (in line 68 --> set to 0)
-        
-        clearScreen(); // clear screen so that previous colors are not visible
+        clearScreen(); // clear terminal
 
-        printf("\n ROUND %d \n", level);
+        // GAME STARTS
 
-        sleep(1);// 1 sec pause
-        
-        // generate new color
-        int randomNum = rand() % 4 + 1; 
-        // store new color in correctSequence variable 
-        correctSequence[level-1] = randomNum; // here we have the correct sequence array
-        
+        printf("\n MEMORY FLASH GAME \n");
+        printf("1=RED🟥, 2=GREEN🟩, 3=BLUE🟦, 4=YELLOW🟨\n");
+        printf("\nPress Enter to start...");
+        getchar();
 
+        while(1) {
+            level++;  // Level increment (in line 68 --> set to 0)
 
+            clearScreen(); // clear screen so that previous colors are not visible
 
-        // Show only the new color
-        clearScreen();
-        printf("\n New Color\n");
-        sleep(1);
-        // Display colour based on the random seed was generated
-        displayColor(correctSequence[level-1]);
+            printf("\n ROUND %d \n", level);
 
+            sleep(1);// 1 sec pause
 
+            // generate new color
+            int randomNum = rand() % 4 + 1;
+            // store new color in correctSequence variable
+            correctSequence[level-1] = randomNum; // here we have the correct sequence array
 
-        
-        // Get player input
-        clearScreen();
-        printf("\n Enter the FULL sequence:\n");
-        printf("(You need %d colors)\n\n", level);//instructs player to 
-        
-        for(int i = 0; i < level; i++) {  // i = loop counter
-            printf("Color %d: ", i+1);   // color 1: {example enters '3'}
-            scanf("%d", &playerInput[i]); // store '3' in playerInput array at index i {where index i is 0}
-            // loop will continue until the it reaches the *level*
-            // now we have all the player inputs
-            // exit
-        }
-        
-        // Verify
-        int correct = 1;
-        for(int i = 0; i < level; i++) { //Check each color one by one
-            if(playerInput[i] != correctSequence[i]) { // if wrong color during match enter the below if condition 
-                correct = 0; //set to false
-                break; // if false exit the loop 
+            // Show only the new color
+            clearScreen();
+            printf("\n New Color\n");
+            sleep(1);
+            // Display colour based on the random seed was generated
+            displayColor(correctSequence[level-1]);
+
+            // Get player input
+            clearScreen();
+            printf("\n Enter the FULL sequence:\n");
+            printf("(You need %d colors)\n\n", level);//instructs player to
+
+            // Flag to check for invalid input
+            int invalidInput = 0;
+
+            for(int i = 0; i < level; i++) {  // i = loop counter
+                printf("Color %d: ", i+1);   // color 1: {example enters '3'}
+                scanf("%d", &playerInput[i]); // store '3' in playerInput array at index i {where index i is 0}
+                // loop will continue until the it reaches the *level*
+                // now we have all the player inputs
+                // exit
+
+                // VALIDATION: Check if input is outside 1-4
+                if(playerInput[i] < 1 || playerInput[i] > 4) {
+                    invalidInput = 1;
+                    break; // Break the input loop
+                }
             }
+
+            // Handle Invalid Input
+            if(invalidInput) {
+                int currentScore = level - 1;
+                // Update High Score
+                if(currentScore > highScore) {
+                    highScore = currentScore;
+                }
+
+                printf("\n--------------------------------\n");
+                printf(" INVALID INPUT! \n");
+                printf("Please enter numbers 1 to 4 only.\n");
+                printf(" GAME OVER.\n");
+                printf("Your Score: %d\n", currentScore);
+                printf("Highest Score: %d\n", highScore); // Show High Score
+                printf("--------------------------------\n");
+                break; // Break the game loop
+            }
+
+            // Verify
+            int correct = 1;
+            for(int i = 0; i < level; i++) { //Check each color one by one
+                if(playerInput[i] != correctSequence[i]) { // if wrong color during match enter the below if condition
+                    correct = 0; //set to false
+                    break; // if false exit the loop
+                }
+            }
+
+            if(correct == 0) {
+                int currentScore = level - 1;
+                // Update High Score
+                if(currentScore > highScore) {
+                    highScore = currentScore;
+                }
+
+                printf("\n--------------------------------\n");
+                printf(" WRONG SEQUENCE! ❌\n");
+                printf(" GAME OVER.\n");
+                printf("Your Score: %d\n", currentScore);
+                printf("Highest Score: %d\n", highScore); // Show High Score
+                printf("--------------------------------\n");
+                break;
+            }
+
+            printf("Correct✅\n");
+            sleep(1);
         }
-        
-        if(correct == 0) {
-            printf("\n Wrong answer ❌ \n");
-            printf("\n Game over\n");
-            printf("Total score: %d\n", level - 1);
-            break;  
-        }
-        
-        printf("Correct✅\n");
-        sleep(1);
-    }
-    
+
+        // Ask to replay
+        printf("\nDo you want to play again? (y/n): ");
+        scanf(" %c", &playAgain);   // space before %c clears buffer
+
+        getchar(); // consume leftover newline so next game starts cleanly
+
+    } while(playAgain == 'y' || playAgain == 'Y');
+
+    printf("\nThanks for playing!\n");
+    printf("Final Highest Score: %d\n", highScore);
+
     return 0;
 }
