@@ -34,28 +34,28 @@ void displayColor(int color) {
         case 1:
             printf(RED);
             printf("                        \n");
-            printf("          RED           \n");
+            printf("        🟥 RED 🟥       \n");
             printf("                        \n");
             printf(RESET);
             break;
         case 2:
             printf(GREEN);
             printf("                        \n");
-            printf("         GREEN          \n");
+            printf("       🟩 GREEN 🟩      \n");
             printf("                        \n");
             printf(RESET);
             break;
         case 3:
             printf(BLUE);
             printf("                        \n");
-            printf("         BLUE           \n");
+            printf("        🟦 BLUE 🟦      \n");
             printf("                        \n");
             printf(RESET);
             break;
         case 4:
             printf(YELLOW);
             printf("                        \n");
-            printf("        YELLOW          \n");
+            printf("       🟨 YELLOW 🟨     \n");
             printf("                        \n");
             printf(RESET);
             break;
@@ -83,7 +83,7 @@ int main() {
     // GAME STARTS
 
     printf("\n MEMORY FLASH GAME \n");
-    printf("1=RED, 2=GREEN, 3=BLUE, 4=YELLOW\n");
+    printf("1=RED🟥, 2=GREEN🟩, 3=BLUE🟦, 4=YELLOW🟨\n");
     printf("\nPress Enter to start...");
     getchar();
     
@@ -106,7 +106,7 @@ int main() {
 
         // Show only the new color
         clearScreen();
-        printf("\n New color\n");
+        printf("\n New Color\n");
         sleep(1);
         // Display colour based on the random seed was generated
         displayColor(correctSequence[level-1]);
@@ -137,12 +137,13 @@ int main() {
         }
         
         if(correct == 0) {
-            printf("\n wrong game end\n");
-            printf("total score: %d\n", level - 1);
-            break;
+            printf("\n Wrong answer ❌ \n");
+            printf("\n Game over\n");
+            printf("Total score: %d\n", level - 1);
+            break;  
         }
         
-        printf("\ncorrect\n");
+        printf("Correct✅\n");
         sleep(1);
     }
     
